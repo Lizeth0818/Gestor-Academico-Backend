@@ -321,6 +321,15 @@ app.get('/api/tasks/course/:courseId', auth, async (req, res) => {
   } catch (e) { res.status(500).json({ msg: e.message }); }
 });
 
+// Todas las tareas del maestro autenticado
+app.get('/api/tasks/mine', auth, async (req, res) => {
+  try {
+    const tasks = await Task.find({ teacher: req.user.id }).sort({ createdAt: -1 });
+    res.json(tasks);
+  } catch (e) { res.status(500).json({ msg: e.message }); }
+});
+
+
 // Entregar tarea (alumno sube archivos)
 app.post('/api/tasks/:taskId/submit', auth, upload.array('files', 10), async (req, res) => {
   try {
